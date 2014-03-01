@@ -27,7 +27,7 @@
     # standard PHP one).
     #---------------------------------------------------------------------------
     $eventid = arg(1);
-    $signup_url = $URLS['USER_SIGNUP'] .'?eventid=' . $eventid;
+    $signup_url = $URLS['USER_SIGNUP'] . '?eventid=' . $eventid;
     
     $assign_experiments = check_standard_questions($eventid, 'expts');
 
@@ -38,9 +38,10 @@
 
     if ($assign_experiments)
     {
+      $expt_assign_url = $URLS['EXPT_CHOICE'] . '?eventid=' . $eventid;
       echon('<p>');
       echon('  The experiment selection for this page can be found at');
-      echon('  <a href="' . $signup_url . '">' . $signup_url . '</a>');
+      echon('  <a href="' . $expt_assign_url . '">' . $expt_assign_url .'</a>');
       echon('</p>');
     }
 

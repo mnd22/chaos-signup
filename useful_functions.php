@@ -1080,4 +1080,75 @@
       }
     }
   }
+
+ /**
+  *  Assigns a user's experiment allocation.
+  *
+  * @param $eventid
+  * @param $userid
+  * @param $mornexptid
+  * @param $afterexptid
+  *
+  * @return Boolean  True if successful, False otherwise
+  */
+  function assign_user_expts($eventid, $userid, $mornexptid, $afterexptid)
+  {
+    global $TABLES;
+
+    $TABLES['EXPT_ASSIGN'] = 'signup_system_expt_assign';
+
+    #--------------------------------------------------------------------------
+    # Check whether the experiment and event IDs given correspond to actual
+    # experiments and events.  If not, do nothing.
+    #--------------------------------------------------------------------------
+    if (is_event($eventid) && (is_experiment($mornexptid) || $mornexptid == 0)
+                          && (is_experiment($afterexptid) || $afterexptid == 0))
+    {
+      $query = 'DELETE FROM ' . $TABLES['EXPT_ASSIGN'] .
+               ' WHERE userid="' . $userid . '" AND eventid="' . $eventid . '"';
+
+      db_query($query);
+
+      $query = "INSERT INTO " . $TABLES['EXPT_ASSIGN']
+                      . " (eventid, userid, mornexptid, afterexptid) VALUES"
+                      . "('" . $eventid .  "', '" . $userid . "', '"
+                             . $mornexptid . "', '" . $afterexptid . "')";
+      $successful = db_query($query);
+    }
+    else
+    {
+      $successful = FALSE;
+    }
+
+    return $successful;
+  }
+
+ /**
+  * Gets a user's experiment allocation.
+  *
+  * @param $eventid
+  * @param $userid
+  *
+  * @return Array of form ('mornexptid' => mornexptid,
+  *                        'afterexptid' => aftexptid)
+  */
+  function get_expt_assignment($eventid, $userid)
+  {
+    global $TABLES;
+
+    $TABLES['EXPT_ASSIGN'] = 'signup_system_expt_assign';
+
+    #--------------------------------------------------------------------------
+    # Check whether the experiment and event IDs given correspond to actual
+    # experiments and events.  If not, do nothing.
+    #--------------------------------------------------------------------------
+    $query = 'SELECT * FROM ' . $TABLES['EXPT_ASSIGN'] .
+               ' WHERE userid="' . $userid . '" AND eventid="' . $eventid . '"';
+
+    $query_result = db_query($query);
+    $row = db_fetch_array($query_result);
+
+    return Array('mornexptid' => $row['mornexptid'],
+                 'afterexptid' => $row['afterexptid']);
+  }
 ?>

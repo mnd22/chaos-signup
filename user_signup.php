@@ -132,6 +132,27 @@
       echon("  signup by making changes in the form below. ");
       echon("</td></tr></table>");
     }
+    
+    $expts_assigned = get_expt_assignment($eventid, $userid);
+    
+    if ($expts_assigned['mornexptid'] || $expts_assigned['afterexptid'])
+    {
+      echon('You have been assigned to the following experiments:<br />');
+    }
+    
+    if ($expts_assigned['mornexptid'])
+    {
+      echon('Morning: <a href="' . $URLS['BASE'] .  '/node/'
+            . (string)$expts_assigned['mornexptid']. '">' .
+              get_node_title($expts_assigned['mornexptid']) . '</a><br />');
+    }
+
+    if ($expts_assigned['afterexptid'])
+    {
+      echon('Afternoon: <a href="' . $URLS['BASE'] .  '/node/'
+            . (string)$expts_assigned['afterexptid']. '">' .
+              get_node_title($expts_assigned['afterexptid']) . '</a><br />');
+    }
 
     #---------------------------------------------------------------------------
     # Now create the form that allows the user to enter updates.

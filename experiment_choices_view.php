@@ -37,18 +37,8 @@
       return FALSE;
     }
 
-    $eventid = $_GET[;
+    $eventid = $_GET['eventid'];
     $signup_url = $URLS['USER_SIGNUP'] .'?eventid=' . $eventid;
-    
-    echon('<p>');
-    echon('  The publicly facing signup form for this page can be found at');
-    echon('  <a href="' . $signup_url . '">' . $signup_url . '</a>');
-    echon('</p>');
-
-    echon('<p>');
-    echon('  The publicly facing signup form for this page can be found at');
-    echon('  <a href="' . $signup_url . '">' . $signup_url . '</a>');
-    echon('</p>');
 
     $all_signups = list_all_signups($eventid);
 
@@ -62,16 +52,22 @@
 
     $user_columns = Array('fullname' => 'Name',
                           'mail'     => 'E-mail',
-                          'college'  => 'College',
-                          'subject'  => 'Subject',
-                          'yeargroup' => 'Year');
+                          'subject'  => 'Subject');
     $other_columns = Array('session'  => 'Session',
                            'comments' => 'Comments');
 
-    $num_cols = count($user_columns) + count($other_columns);
+    $expt_columns = Array();
+    $expt_list = get_event_expt_list($eventid);
+    
+    foreach ($expt_list as $exptid => $dems)
+    {
+      $expt_columns[$exptid] = get_node_title($exptid);
+    }
+    
+    $num_cols = count($user_columns) + count($other_columns)
+                                     + count($expt_columns);
 
     echon('<h2>Volunteer signups</h2>');
-    echon('There have been <b>' . (string)$num_signups . '</b> so far.');
 
     echon('<table>');
 
@@ -90,7 +86,11 @@
       echon('    <th>' . $col_name .'</th>');
     }
 
-    echon('    <th></th>');
+    foreach ($expt_columns as $col_name)
+    {
+      echon('    <th>' . $col_name .'</th>');
+    }
+
     echon('  </tr>');
 
     #---------------------------------------------------------------------------
@@ -103,12 +103,13 @@
         $font_start_tag = '<font color="grey">';
         $font_end_tag   = '</font>';
       }
-
+      
       echon('  <tr>');
 
       foreach ($user_columns as $col_key => $col_name)
       {
-        echon('    <td>' . $font_start_tag . get_user_detail($userid, $col_key) . $font_end_tag . '</td>');
+        echon('    <td>' . $font_start_tag . get_user_detail($userid, $col_key)
+                                           . $font_end_tag . '</td>');
       }
 
       foreach ($other_columns as $col_key => $col_name)
@@ -125,9 +126,20 @@
         }
       }
 
-      $editlink = 'http://www.chaosscience.org.uk/committee/events/editsignup' .
-                                  '?eventid=' . $eventid . '&userid=' . $userid;
-      echon('    <td><a href="' . $editlink . '">Edit</a></td>');
+      $user_expts = get_user_expt_choices($eventid, $userid);
+
+      foreach ($expt_columns as $exptid => $exptname)
+      {
+        if (in_array($exptid, $user_expts))
+        {
+          echon('    <td>' . $font_start_tag . '1'
+                                           . $font_end_tag . '</td>');
+        }
+        else
+        {
+           echon('    <td></td>');
+        }
+      }
 
       echon('  </tr>');
     }

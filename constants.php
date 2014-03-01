@@ -39,7 +39,8 @@
                   'EXPERIMENTS'  => $SIGNUP_PREFIX . 'experiments',
                   'COMMENTS'     => $SIGNUP_PREFIX . 'othercomments',
                   'SESSIONS'     => $SIGNUP_PREFIX . 'sessions',
-                  'EXPT_CHOICE'  => $SIGNUP_PREFIX . 'expt_choices');
+                  'EXPT_CHOICE'  => $SIGNUP_PREFIX . 'expt_choices',
+                  'EXPT_ASSIGN'  => $SIGNUP_PREFIX . 'expt_assign');
   /**
    * List of subjects allowed for experiments (different from that for
    * volunteers).

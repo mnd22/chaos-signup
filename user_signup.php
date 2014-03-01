@@ -10,21 +10,95 @@
   */
   include_once("../signup_system/useful_functions.php");
 
- /**
-  *
-  * @todo Implement this!
-  */
-  function save_user_expt_choice($eventid)
+  /**
+   * Adds an experiment to the list of expts chosen by a demonstrator for
+   * the specified event.
+   *
+   * @param $eventid    The node ID of the event.
+   * @param $userid     The user's ID.
+   * @param $exptid     The node ID of the experiment
+   *
+   * @returns Boolean   TRUE if successful, FALSE otherwise.
+   */
+  function add_expt_choice_to_event($eventid, $userid, $exptid)
   {
+    global $TABLES;
 
+    #--------------------------------------------------------------------------
+    # Check whether the experiment and event IDs given correspond to actual
+    # experiments and events.  If not, do nothing.
+    #--------------------------------------------------------------------------
+    if (is_experiment($exptid) && is_event($eventid))
+    {
+      $query = "INSERT INTO " . $TABLES['EXPT_CHOICE']
+                      . " (eventid, userid, exptid) VALUES"
+                      . "('" . $eventid .  "', '" . $userid . "', '"
+                                                  . $exptid . "')";
+      $successful = db_query($query);
+    }
+    else
+    {
+      $successful = FALSE;
+    }
+
+    return $successful;
+  }
+  
+  /**
+   *Gets the user's current experiment choice from the DB.
+   *
+   * @param $eventid    The node ID of the event.
+   * @param $userid     The user's ID.
+   *
+   * @returns Array   Simple list of experiment IDs, empty if none known.
+   */
+  function get_user_expt_choices($eventid, $userid)
+  {
+    global $TABLES;
+
+    $query = 'SELECT exptid FROM '. $TABLES['EXPT_CHOICE'] . ' WHERE userid="'
+                 . (string)$userid . '" AND eventid="' . (string)$eventid . '"';
+
+    $query_result = db_query($query);
+    
+    $output_array = Array();
+    
+    while ($row = db_fetch_array($query_result));
+    {
+      if (isset($row['exptid']))
+      {
+        $output_array[] = $row['exptid'];
+      }
+    }
+    
+    return $output_array;
+  }
+ /**
+  * Save a user's experiment choice to the database.  Requires $_POST access.
+  *
+   * @param $eventid    The node ID of the event.
+   * @param $userid     The user's ID.
+  */
+  function save_user_expt_choice($eventid, $userid)
+  {
+    global $TABLES;
+    
+    $query = 'DELETE FROM '. $TABLES['EXPT_CHOICE'] . ' WHERE userid="'
+                 . (string)$userid . '" AND eventid="' . (string)$eventid . '"';
+    $successful = db_query($query);
+  
     if (!isset($_POST['exptlist']))
     {
       #------------------------------------------------------------------------
       # No experiments selected, so nothing else to do.
       #------------------------------------------------------------------------
+      $new_expt_list = $_POST['exptlist'];
+      
+      foreach ($new_expt_list as $exptid)
+      {
+        add_expt_choice_to_event($eventid, $userid, $exptid);
+      }
     }
-          echon('      <td><input type="checkbox" name="exptlist[]" value="'
-                                                       . $exptid . '/></td>');
   }
 
  /**
@@ -35,7 +109,7 @@
     #---------------------------------------------------------------------------
     # Import global variables (used as constants) declared in constants.php.
     #---------------------------------------------------------------------------
-    global $URLS, $TABLES, $EMAILS, $EXPT_SUBJECTS;;
+    global $URLS, $TABLES, $EMAILS, $EXPT_SUBJECTS;
 
     if (!isset($_GET['eventid']))
     {
@@ -125,7 +199,7 @@
       
       if ($assign_experiments == 'Yes')
       {
-        save_user_expt_choice($eventid);
+        save_user_expt_choice($eventid, $userid);
       }
       
       if ($assign_dates == 'Yes')
@@ -156,8 +230,9 @@
     # Firstly set hidden fields to indicate that a change has been input if we 
     # then go on to click the submit button.              
     #---------------------------------------------------------------------------
-    echon('<form action="' . $URLS['USER_SIGNUP'] . '?eventid=' . $eventid
-                                                          . '" method="post">');
+    $current_url = $URLS['USER_SIGNUP'] . '?eventid=' . (string)$eventid;
+    echon('<form action="' . $current_url . '" method="post">');
+
     echon('  <input type="hidden" name="changesubmitted" />');
     echon('  <input type="hidden" name="eventid" value="' . $eventid . '"/>');
     echon('  <input type="hidden" name="userid" value="' . $userid . '"/>');
@@ -193,7 +268,7 @@
 
     echon('  <table>');
     echon('    <tr>');
-    echon('      <th colspan=3>Event Information</th>');
+    echon('      <th colspan=3>Event Availability</th>');
     echon('    </tr>');
 
     if ($assign_sessions == 'Yes')
@@ -201,7 +276,7 @@
       #-------------------------------------------------------------------------
       # This is a CBS-like event, so offer a choice between morning/afternoon.
       #
-      # First, Work out which box to tick as default if the user has already 
+      # First, work out which box to tick as default if the user has already
       # submitted the form on a previous occasion..
       #-------------------------------------------------------------------------
       $current_session_wanted = get_session_wanted($eventid, $userid);
@@ -267,7 +342,7 @@
       echon('    </tr>');
 
       echon('    <tr>');
-      echon('      <td><p>');
+      echon('      <td colspan=3><p>');
       echon('        Please select the experiments that you would be happy');
       echon('        to demonstrate from the list below.  The more options');
       echon('        that you choose, the more likely you are to get');
@@ -280,6 +355,8 @@
       echon('      </td>');
       echon('    </tr>');
 
+      $current_expts = get_user_expt_choices($eventid, $userid);
+      
       $expt_options = get_event_expt_list($eventid);
 
       #-------------------------------------------------------------------------
@@ -298,7 +375,7 @@
       {
         $subject = get_expt_subject($exptid);
 
-        if (in_array($EXPT_SUBJECTS, $subject))
+        if (in_array($subject, $EXPT_SUBJECTS))
         {
           $expt_subject_options[$subject][] = $exptid;
         }
@@ -307,20 +384,32 @@
       foreach ($EXPT_SUBJECTS as $subject)
       {
         echon('    <tr>');
-        echon('      <td colspan=3>' . $subject . '</td>');
+        echon('      <td colspan=3><b>' . $subject . '</b></td>');
         echon('    </tr>');
 
         foreach ($expt_subject_options[$subject] as $exptid)
         {
           $expt_title = get_node_title($exptid);
-          $expt_intro = get_expt_intro($exptid, FALSE);
+          $expt_intro = get_expt_intro($exptid, 0, FALSE);
+          
+          $checked_string = '';
+          
+          if(in_array($exptid, $current_expts))
+          {
+            $checked_string = 'checked="checked" ';
+          }
 
           echon('    <tr>');
+          echon('      <td></td>');
           echon('      <td><input type="checkbox" name="exptlist[]" value="'
-                                                       . $exptid . '/></td>');
-          echon('      <td><a href="' . $URLS['BASE'] . '/node/'
-                    . (string)$exptid . '">' . $expt_title . '</a></td>');
-          echon('      <td>' . $expt_intro . '</td>');
+                                . $exptid . '" ' . $checked_string . '/></td>');
+
+          echon('      <td><a href="' . $URLS['BASE'] . '/node/' .
+          (string)$exptid . '">' . htmlspecialchars($expt_title) . '</a></td>');
+          echon('    </tr>');
+          echon('    <tr>');
+          echon('      <td></td><td></td>');
+          echon('      <td>' . htmlspecialchars($expt_intro) . '</td>');
           echon('    </tr>');
         }
       }
@@ -360,11 +449,14 @@
     {
       $current_comments = 'value="' . get_comments($eventid, $userid) . '" ';
     }
-
-    echon('      <td>Other comments</td><td></td>');
+    
+    echon('    <tr>');
+    echon('      <th colspan=3>Other Comments</th>');
+    echon('    </tr>');
+    echon('      <td>Anything else you want to tell us?</td><td></td>');
     echon('      <td>');
     echon('        <input type="text" name="othercomments" size="70" ' .
-                                 'maxlength="500" ' . $current_comments . '/>');
+                         'maxlength="500" value="' . $current_comments . '"/>');
     echon('      </td>');
     echon('    </tr>');
     echon('  </table>');

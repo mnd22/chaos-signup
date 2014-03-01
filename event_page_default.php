@@ -106,7 +106,7 @@
       if ($status == 'withdrawn')
       {
         $font_start_tag = '<font color="grey">';
-        $font_end_tag   = '</font>'
+        $font_end_tag   = '</font>';
       }
 
       echon('  <tr>');

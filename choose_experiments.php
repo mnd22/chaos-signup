@@ -150,7 +150,6 @@
     #---------------------------------------------------------------------------
     $current_url = $URLS['EXPT_CHOICE'] . '?eventid=' . $event_id;
     echon('<form action="' . $current_url . '" method="get">');
-    echon('  <input type="submit" value="Submit Experiment Choice" />');
     echon('  <input type="hidden" name="changesubmitted" />');
     echon('  <input type="hidden" name="eventid" value="' . $event_id . '"/>');
 

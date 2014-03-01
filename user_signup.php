@@ -1,28 +1,42 @@
 <?php
-  /**
-   * This is the main signup page for new users.
-   * http://www.chaosscience.org.uk/demonstrator/signup
-   *
-   * @file user_signup.php
-   *
-   * @author   Mark Durkee
-   * @version  V0.02
-   */
+ /**
+  * This is the main signup page for new users.
+  * http://www.chaosscience.org.uk/demonstrator/signup
+  *
+  * @file user_signup.php
+  *
+  * @author   Mark Durkee
+  * @version  V0.03
+  */
   include_once("../signup_system/useful_functions.php");
 
-  /**
-   * Main function to construct page content.
-   */
+ /**
+  *
+  * @todo Implement this!
+  */
+  function save_user_expt_choice($eventid)
+  {
+
+    if (!isset($_POST['exptlist']))
+    {
+      #------------------------------------------------------------------------
+      # No experiments selected, so nothing else to do.
+      #------------------------------------------------------------------------
+    }
+          echon('      <td><input type="checkbox" name="exptlist[]" value="'
+                                                       . $exptid . '/></td>');
+  }
+
+ /**
+  * Main function to construct page content.
+  */
   function main()
   {
     #---------------------------------------------------------------------------
-    # Import global variables declared in useful_functions.
+    # Import global variables (used as constants) declared in constants.php.
     #---------------------------------------------------------------------------
-    global $URLS, $TABLES;
-    
-    $EMAILS = Array('WEB'     => "webmaster@chaosscience.org.uk",
-                    'CONTACT' => "contact@chaosscience.org.uk");
-    
+    global $URLS, $TABLES, $EMAILS, $EXPT_SUBJECTS;;
+
     if (!isset($_GET['eventid']))
     {
       echon("<p>");
@@ -36,7 +50,7 @@
       echon("  <a href='" . $URLS['EVENT_LIST']
                              . "'>Click here to go to the list of events.</a>");
       echon("</p>");
-      return FALSE;   
+      return FALSE;
     }
     
     $eventid = $_GET['eventid'];
@@ -56,13 +70,13 @@
       echon("</p>");
       return FALSE;
     }
-    
+
     $event_title = get_node_title($eventid);
     $event_thanks_message = get_thanks_message($eventid);
     echon('<h1>' . $event_title . '</h1>');
-    
+
     $userid = current_user();
-    
+
     if ($userid == 0)
     {
       #-------------------------------------------------------------------------
@@ -73,7 +87,7 @@
                . '?destination=demonstrator/signup?eventid=' . (string)$eventid;
       $register_url = $URLS['REGISTER']
                . '?destination=demonstrator/signup?eventid=' . (string)$eventid;
-               
+
       echon("<p>");
       echon(" Thanks for showing an interest in helping with a CHaOS event.");
       echon(" The first stage in signing up is to <a href='" . $register_url
@@ -93,9 +107,9 @@
     $assign_experiments = check_standard_questions($eventid, 'expts');
     $assign_dates = check_standard_questions($eventid, 'dates');
     $extra_questions = 'No';
-    
+
     $current_time = time();
-    
+
     if (isset($_POST['changesubmitted']))
     {
       #-------------------------------------------------------------------------
@@ -111,7 +125,7 @@
       
       if ($assign_experiments == 'Yes')
       {
-        echon('ERROR: Attempted to assign expts, but that is not implemented');
+        save_user_expt_choice($eventid);
       }
       
       if ($assign_dates == 'Yes')
@@ -185,8 +199,10 @@
     if ($assign_sessions == 'Yes')
     {
       #-------------------------------------------------------------------------
-      # Work out which box to tick as default, if the user has already submitted
-      # form.
+      # This is a CBS-like event, so offer a choice between morning/afternoon.
+      #
+      # First, Work out which box to tick as default if the user has already 
+      # submitted the form on a previous occasion..
       #-------------------------------------------------------------------------
       $current_session_wanted = get_session_wanted($eventid, $userid);
       $morning_checked = "";
@@ -210,9 +226,6 @@
         	break;
       }
 
-      #-------------------------------------------------------------------------
-      # This is a CBS-like event, so offer a choice between morning/afternoon.
-      #-------------------------------------------------------------------------
       echon('    <tr>');
       echon('      <td>Sessions available</td><td></td><td>');
       echon('        <input type="radio" name="sessions" value="Morning" ' .
@@ -234,7 +247,8 @@
     elseif ($assign_sessions == 'Later')
     {
       #-------------------------------------------------------------------------
-      # Session choice is not available yet, though hard to see why any
+      # Session choice is not available yet, though hard to see why anyone 
+      # would not want this to be available at the same time as signup!
       #-------------------------------------------------------------------------
       echon('    <tr><td colspan=3><i>');
       echon("      At a later date you'll be able to choose which sessions");
@@ -247,24 +261,69 @@
     {
       #-------------------------------------------------------------------------
       # Let the user make a choice of experiments.
-      # This function does not yet work, but will be implemented soon.
       #-------------------------------------------------------------------------
-      echon("ERROR: Experiment assignment function is not yet functional");
+      echon('    <tr>');
+      echon('      <th colspan=3>Experiment choices</th>');
+      echon('    </tr>');
+
+      echon('    <tr>');
+      echon('      <td><p>');
+      echon('        Please select the experiments that you would be happy');
+      echon('        to demonstrate from the list below.  The more options');
+      echon('        that you choose, the more likely you are to get');
+      echon('        something that you want.  You don\'t have to restrict');
+      echon('        yourself to experiments that are listed under your own');
+      echon('        subject, many chemistry/medic experiments are suitable');
+      echon('        for biologists, physics experiments for engineers etc.');
+      echon('        </p><p>');
+      echon('        <b>You MUST choose at least 3 experiments</b>');
+      echon('      </td>');
+      echon('    </tr>');
+
+      $expt_options = get_event_expt_list($eventid);
+
       #-------------------------------------------------------------------------
-      # If we're giving demonstrators an experiment choice then display the
-      # options here.
-      #---------------------------------------------------------------------------
-      #$query = "SELECT nid, title FROM drupal_node WHERE type = 'experiment'";
-      #$query_result = db_query($query);
-      #while ($row = db_fetch_array($query_result))
-      #{
-      #  echon '    <tr><td>';
-      #  echon '      <a href="' . $BASE_URL . '/node/'
-      #                              . $row['nid'] . '">' . $row['title'] . "</a>";
-      #  echon '    </td><td>';
-      #  echon '      ';
-      #  echon '    </td></tr>';
-      #}
+      # We want the user to be able to sort experiments by subject.  To do this,
+      # we create an array that holds the expt_options in this form.  First we 
+      # need to initialize an array with the correct constants.
+      #-------------------------------------------------------------------------
+      $expt_subject_options = Array();
+
+      foreach ($EXPT_SUBJECTS as $subject)
+      {
+        $expt_subject_options[$subject] = Array();
+      }
+
+      foreach ($expt_options as $exptid => $dems_range)
+      {
+        $subject = get_expt_subject($exptid);
+
+        if (in_array($EXPT_SUBJECTS, $subject))
+        {
+          $expt_subject_options[$subject][] = $exptid;
+        }
+      }
+
+      foreach ($EXPT_SUBJECTS as $subject)
+      {
+        echon('    <tr>');
+        echon('      <td colspan=3>' . $subject . '</td>');
+        echon('    </tr>');
+
+        foreach ($expt_subject_options[$subject] as $exptid)
+        {
+          $expt_title = get_node_title($exptid);
+          $expt_intro = get_expt_intro($exptid, FALSE);
+
+          echon('    <tr>');
+          echon('      <td><input type="checkbox" name="exptlist[]" value="'
+                                                       . $exptid . '/></td>');
+          echon('      <td><a href="' . $URLS['BASE'] . '/node/'
+                    . (string)$exptid . '">' . $expt_title . '</a></td>');
+          echon('      <td>' . $expt_intro . '</td>');
+          echon('    </tr>');
+        }
+      }
     }
     elseif ($assign_experiments == 'Later')
     {

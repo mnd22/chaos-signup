@@ -131,7 +131,7 @@
       return FALSE;
     }
 
-    $query = "SELECT count(comment) FROM " . $TABLES['COMMENTS'] .
+    $query = "SELECT comment FROM " . $TABLES['COMMENTS'] .
            " WHERE eventid = '" . $eventid . "' AND userid = '" . $userid . "'";
     $result = db_result(db_query($query));
 
@@ -535,6 +535,26 @@
   }
 
   /**
+   * Checks whether a given user has chosen the given experiment for
+   * a given event.
+   *
+   * @param $nid         The node ID.
+   *
+   * @return Boolean     TRUE or FALSE, as appropriate.
+   */
+  function is_experiment_chosen($eventid, $exptid)
+  {
+    if (get_node_type($nid) == "experiment")
+    {
+      return TRUE;
+    }
+    else
+    {
+      return FALSE;
+    }
+  }
+
+  /**
    * Add this signup to the database.
    *
    * @param $current_time   The current time in seconds past the epoch.
@@ -638,7 +658,7 @@
       # Create a new comment.
       #-------------------------------------------------------------------------
       db_query('INSERT INTO ' . $TABLES['COMMENTS'] .
-                      ' (eventid, userid, comment) ' .
+                      ' (eventid, userid, comment)' .
                       ' VALUES ("' . $eventid . '", "' . $userid . '", "%s")',
                $comment);
     }
@@ -778,6 +798,39 @@
 
     return $output_array;
   }
+ /**
+  * Gets a list of experiments that are available for selection for this event.
+  * Note that this has been already set by the responsible committee member by
+  * choosing from the choose_experiments page.
+  *
+  * @param $eventid   The event in question.
+  * @returns Array    Format Array(exptid => Array(mindems, maxdems)).
+  *                   Empty array if no expts selected.
+  */
+  function get_event_expt_list($eventid)
+  {
+    global $TABLES;
+
+    $output_array = Array();
+
+    $query = 'SELECT * FROM ' . $TABLES['EXPERIMENTS']
+                   . ' WHERE eventid="' . $eventid . '"';
+    $query_result = db_query($query);
+
+    while ($row = db_fetch_array($query_result))
+    {
+      if (isset($row['exptid']) and isset($row['mindems']) 
+                                and isset($row['maxdems']))
+      {
+        $output_array[$row['exptid']] = Array(mindems => $row['mindems'],
+                                              maxdems => $row['maxdems']);
+      }
+
+    }
+
+    return $output_array;
+
+  }
 
  /**
   * Gets the intro text for the experiment specified.
@@ -833,6 +886,8 @@
   */
   function get_expt_subject($exptid, $versionid = 0, $verifyid = TRUE)
   {
+    global $EXPT_SUBJECTS;
+
     if ($versionid == 0)
     {
       #-------------------------------------------------------------------------
@@ -855,7 +910,6 @@
       # Build a string representing the list of allowed subjects, for use in
       # MySQL query.
       #-------------------------------------------------------------------------
-      global $EXPT_SUBJECTS;
       $subjects_string = '(';
 
       foreach ($EXPT_SUBJECTS as $tid => $subject)

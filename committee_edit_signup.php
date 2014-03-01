@@ -269,6 +269,28 @@
       echon("      choice becomes available");
       echon('    </i></td></tr>');
     }
+    
+    #---------------------------------------------------------------------------
+    # Allow the user to give us any other comments (of up to 500 characters).
+    #---------------------------------------------------------------------------
+    $current_comments = "";
+
+    if (comment_exists($eventid, $userid))
+    {
+      $current_comments = ' value="' . get_comments($eventid, $userid) . '" ';
+    }
+    
+    echon('    <tr>');
+    echon('      <th colspan=3>Other Comments</th>');
+    echon('    </tr>');
+    echon('      <td>Anything else you want to tell us?<br>');
+    echon('      <b>Please enter your preferred T-shirt size (S/M/L) here</b>');
+    echon('      </td><td></td>');
+    echon('      <td>');
+    echon('        <input type="text" name="othercomments" size="70" ' .
+                         'maxlength="500"' . $current_comments . '/>');
+    echon('      </td>');
+    echon('    </tr>');
 
     if ($assign_experiments == 'Yes')
     {
@@ -377,26 +399,6 @@
       echon("ERROR: Date assignment function is not yet functional");
     }
 
-    #---------------------------------------------------------------------------
-    # Finally, we always allow the user to give us any other comments (of up to
-    # 500 characters).
-    #---------------------------------------------------------------------------
-    $current_comments = "";
-
-    if (comment_exists($eventid, $userid))
-    {
-      $current_comments = 'value="' . get_comments($eventid, $userid) . '" ';
-    }
-
-    echon('    <tr>');
-    echon('      <th colspan=3>Other Comments</th>');
-    echon('    </tr>');
-    echon('      <td>Anything else you want to tell us?</td><td></td>');
-    echon('      <td>');
-    echon('        <input type="text" name="othercomments" size="70" ' .
-                         'maxlength="500" value="' . $current_comments . '"/>');
-    echon('      </td>');
-    echon('    </tr>');
     echon('  </table>');
 
     #---------------------------------------------------------------------------

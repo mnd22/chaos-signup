@@ -30,6 +30,11 @@
   
   /**
    * Database tables holding the data for the signup system.
+   * 
+   * signup_system_expt_assign (eventid INT UNSIGNED NOT NULL,
+   *                            userid INT UNSIGNED NOT NULL,
+   *                            mornexptid INT UNSIGNED, 
+   *                            afterexptid INT UNSIGNED)      
    */
   global $TABLES;
   $SIGNUP_PREFIX = 'signup_system_';
@@ -54,4 +59,9 @@
                          '37' => 'Engineering',
                          '17' => 'Biology',
                          '18' => 'Other');
+                         
+  global $CONSTANTS;
+  $CONSTANTS = Array('MIN_EXPTS_CHOSEN' => 5,
+                     'MORNING_TIMES' => '9.30am-1.30pm',
+                     'AFTERNOON_TIMES' => '12.30pm - 5pm');                       
 ?>

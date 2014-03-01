@@ -597,26 +597,6 @@
     }
   }
 
-  /**
-   * Checks whether a given user has chosen the given experiment for
-   * a given event.
-   *
-   * @param $nid         The node ID.
-   *
-   * @return Boolean     TRUE or FALSE, as appropriate.
-   */
-  function is_experiment_chosen($eventid, $exptid)
-  {
-    if (get_node_type($nid) == "experiment")
-    {
-      return TRUE;
-    }
-    else
-    {
-      return FALSE;
-    }
-  }
-
  /**
   * Add this signup to the database.
   *
@@ -874,8 +854,8 @@
       if (isset($row['exptid']) and isset($row['mindems']) 
                                 and isset($row['maxdems']))
       {
-        $output_array[$row['exptid']] = Array(mindems => $row['mindems'],
-                                              maxdems => $row['maxdems']);
+        $output_array[$row['exptid']] = Array('mindems' => $row['mindems'],
+                                              'maxdems' => $row['maxdems']);
       }
 
     }
@@ -888,6 +868,9 @@
   * Gets the intro text for the experiment specified.
   *
   * @param $exptid    The experiment to check.
+  * @param $versionid If an experiment has been updated, multiple versions of
+  *                   this intro text will exist in the database.  Must make 
+  *                   sure that the most recent set is there.
   * @param $verifyid  Boolean determining whether we should verify that the
   *                   exptid is a legitimate experiment.  Defaults to TRUE; we
   *                   might want to set it to FALSE to avoid additional
@@ -1059,7 +1042,7 @@
   */
   function save_user_expt_choices($eventid, $userid)
   {
-    global $TABLES;
+    global $TABLES, $CONSTANTS;
 
     $query = 'DELETE FROM '. $TABLES['EXPT_CHOICE'] . ' WHERE userid="'
                  . (string)$userid . '" AND eventid="' . (string)$eventid . '"';
@@ -1069,9 +1052,11 @@
     {
       $new_expt_list = $_POST['exptlist'];
 
-      if (count($new_expt_list) > 0 and count($new_expt_list) < 3)
+      if (count($new_expt_list) > 0 and 
+          count($new_expt_list) < $CONSTANTS['MIN_EXPTS_CHOSEN'])
       {
-        echon('<b>Please select at least 3 experiment choices</b>');
+        echon('<b>Please select at least ' .
+          (string)($CONSTANTS['MIN_EXPTS_CHOSEN']) . ' experiment choices</b>');
       }
 
       foreach ($new_expt_list as $exptid)
@@ -1135,8 +1120,6 @@
   function get_expt_assignment($eventid, $userid)
   {
     global $TABLES;
-
-    $TABLES['EXPT_ASSIGN'] = 'signup_system_expt_assign';
 
     #--------------------------------------------------------------------------
     # Check whether the experiment and event IDs given correspond to actual

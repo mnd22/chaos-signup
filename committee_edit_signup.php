@@ -11,7 +11,7 @@
    */
   include_once("../signup_system/useful_functions.php");
 
-  function main()
+  function main_committee_edit_signup()
   {
     #---------------------------------------------------------------------------
     # Import global variables (used as constants) declared in constants.php.
@@ -38,7 +38,7 @@
 
     $eventid = $_GET['eventid'];
     $userid = $_GET['userid'];
-    $current_url = $URLS['USER_SIGNUP'] . '?eventid=' . (string)$eventid
+    $current_url = $URLS['EDIT_SIGNUP'] . '?eventid=' . (string)$eventid
                                         . '&userid=' . (string)$userid;
 
     if (!is_event($eventid))
@@ -109,11 +109,18 @@
 
     if (isset($_POST['changesubmitted']))
     {
+      $signupstatus = "new";
+      
+      if (signup_exists($eventid, $userid))
+      {
+        $signupstatus = "edited";
+      }
+
       #-------------------------------------------------------------------------
       # The user has just submitted a change, so save the change in the database
       # and inform them that it has been submitted.
       #-------------------------------------------------------------------------
-      save_signup_to_db($current_time, $eventid, $userid);
+      save_signup_to_db($current_time, $eventid, $userid, $signupstatus);
 
       if ($assign_sessions == 'Yes' and isset($_POST['sessions']))
       {
@@ -191,6 +198,15 @@
     echon('  <table>');
     echon('    <tr>');
     echon('      <th colspan=3>Event Availability</th>');
+    echon('    </tr>');
+
+    echon('    <tr>');
+    echon('      <td>User no longer available</td><td></td><td>');
+    echon('        <input type="checkbox" name="withdrawn" />Withdrawn ' .
+                                            '(volunteer has pulled out)<br />');
+    echon('        <input type="checkbox" name="rejected" />Rejected ' .
+                                       '(CHaOS could not use volunteer)<br />');
+    echon('      </td>');
     echon('    </tr>');
 
     if ($assign_sessions == 'Yes')
@@ -393,7 +409,7 @@
   #----------------------------------------------------------------------------
   # START OF MAIN FUNCTION
   #
-  # Just calls into the main() function defined above.
+  # Just calls into the main_committee_edit_signup() function defined above.
   #----------------------------------------------------------------------------
-  main();
+  main_committee_edit_signup();
 ?>

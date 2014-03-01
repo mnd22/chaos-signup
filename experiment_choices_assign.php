@@ -6,7 +6,7 @@
    * with PHP it is safe to edit this text for a single event without breaking
    * other events.
    *
-   * @file event_page_default.php
+   * @file experiment_choices_assign.php
    *
    * @author   Mark Durkee
    * @version  V0.01
@@ -17,7 +17,7 @@
   /**
    * Displays a list of current signups.
    */
-  function main()
+  function main_experiment_choices_assign()
   {
     global $URLS, $TABLES, $EMAILS, $EXPT_SUBJECTS;
 
@@ -285,8 +285,8 @@
   #----------------------------------------------------------------------------
   # START OF MAIN FUNCTION
   #
-  # Just calls into the main() function defined above.
+  # Just calls into the main_event_page_default() function defined above.
   #----------------------------------------------------------------------------
-  main()
+  main_experiment_choices_assign()
 
 ?>

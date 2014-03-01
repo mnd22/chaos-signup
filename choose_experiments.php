@@ -97,7 +97,7 @@
     return $successful;
   }
   
-  function main()
+  function main_choose_experiments()
   {
     global $URLS, $TABLES, $EMAILS, $EXPT_SUBJECTS;
         
@@ -228,9 +228,9 @@
   #----------------------------------------------------------------------------
   # START OF MAIN FUNCTION
   #
-  # Just calls into the main() function defined above.                    
+  # Just calls into the main_choose_experiments() function defined above.                    
   #---------------------------------------------------------------------------- 
-  main()
+  main_choose_experiments()
 
 ?>
 

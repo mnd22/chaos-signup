@@ -13,12 +13,12 @@
  /**
   * Main function to construct page content.
   */
-  function main()
+  function main_user_signup()
   {
     #---------------------------------------------------------------------------
     # Import global variables (used as constants) declared in constants.php.
     #---------------------------------------------------------------------------
-    global $URLS, $TABLES, $EMAILS, $EXPT_SUBJECTS;
+    global $URLS, $TABLES, $EMAILS, $EXPT_SUBJECTS, $CONSTANTS;
 
     if (!isset($_GET['eventid']))
     {
@@ -127,10 +127,37 @@
     }
     elseif (signup_exists($eventid, $userid))
     {
-      echon("<table><tr><td>");
-      echon("  You've already signed up for this event.  You can edit your ");
-      echon("  signup by making changes in the form below. ");
-      echon("</td></tr></table>");
+      $signupstatus = get_signup_status($eventid, $userid);
+      
+      if (($signupstatus == "new") or ($signupstatus == "edited"))
+      {
+        echon("<table><tr><td>");
+        echon("  You've already signed up for this event.  You can edit your ");
+        echon("  signup by making changes in the form below. ");
+        echon("</td></tr></table>");
+      }
+      elseif ($signupstatus == "withdrawn")
+      {
+        echon("<table><tr><td>");
+        echon("  You have withdrawn from this event. ");
+        echon("</td></tr></table>");
+      }
+      elseif ($signupstatus == "rejected")
+      {
+        echon("<table><tr><td>");
+        echon("  Thanks for signing up for this event, unfortunately there ");
+        echon("  was no space for you this time.");
+        echon("</td></tr></table>");
+      }
+      elseif (($signupstatus == "assigned") or ($signupstatus == "reassigned"))
+      {
+        echon("<table><tr><td>");
+        echon("  Thanks for signing up for this event.  You have now been ");
+        echon("  assigned a place at the event.  If you can no longer make it");
+        echon("  then please let the committee know asap so that they can");
+        echon("  find someone else (" . $EMAILS['CONTACT'] . ").");
+        echon("</td></tr></table>");
+      }
     }
     
     $expts_assigned = get_expt_assignment($eventid, $userid);
@@ -247,7 +274,8 @@
       echon('      </td>');
       echon('    </tr><tr><td colspan=3><i>');
       echon("      Session times are normally:<br />");
-      echon("      Morning: 9.30am-1.30pm, Afternoon: 12.30pm - 5pm<br />");
+      echon('      Morning: ' . $CONSTANTS['MORNING_TIMES'] . 
+              ', Afternoon: ' . $CONSTANTS['AFTERNOON_TIMES'] . '<br />');
       echon("      Don't worry, you'll get a chance to stop for a");
       echon("      tea-break (or <b>FREE</b> lunch if you're here all day).");
       echon('    </i></td></tr>');
@@ -284,7 +312,8 @@
       echon('        subject, many chemistry/medic experiments are suitable');
       echon('        for biologists, physics experiments for engineers etc.');
       echon('        </p><p>');
-      echon('        <b>You MUST choose at least 3 experiments</b>');
+      echon('        <b>You MUST choose at least ' 
+               . (string)($CONSTANTS['MIN_EXPTS_CHOSEN']) . ' experiments</b>');
       echon('      </td>');
       echon('    </tr>');
 
@@ -404,7 +433,7 @@
   #----------------------------------------------------------------------------
   # START OF MAIN FUNCTION
   #
-  # Just calls into the main() function defined above.
+  # Just calls into the main_user_signup() function defined above.
   #---------------------------------------------------------------------------- 
-  main();
+  main_user_signup();
 ?>

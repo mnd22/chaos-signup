@@ -79,7 +79,7 @@
    * @param $eventid    The node ID of the event.
    * @param $userid     The user's ID.
   */
-  function save_user_expt_choice($eventid, $userid)
+  function save_user_expt_choices($eventid, $userid)
   {
     global $TABLES;
     
@@ -199,7 +199,7 @@
       
       if ($assign_experiments == 'Yes')
       {
-        save_user_expt_choice($eventid, $userid);
+        save_user_expt_choices($eventid, $userid);
       }
       
       if ($assign_dates == 'Yes')

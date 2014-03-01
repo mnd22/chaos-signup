@@ -19,7 +19,7 @@
    */
   function show_current_signups()
   {
-    $eventid = '878';
+    $eventid = arg(1);
     
     $all_signups = list_all_signups($eventid);
 

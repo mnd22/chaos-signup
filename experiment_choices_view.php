@@ -20,29 +20,35 @@
   function main()
   {
     global $URLS, $TABLES, $EMAILS, $EXPT_SUBJECTS;
-    #---------------------------------------------------------------------------
-    # This is the default content for the page that defines the event.  We need
-    # therefore to work out what page we're on.  The only way of doing this in
-    # drupal seems to be the following (note arg is a drupal API function not a
-    # standard PHP one).
-    #---------------------------------------------------------------------------
-    $eventid = arg(1);
+
+    if (!isset($_GET['eventid']))
+    {
+      echon("<p>");
+      echon(" This page allows you to view experiment choices for an event,");
+      echon("  you've somehow managed to get here without specifying which");
+      echon("  event!  If you clicked a link to get here");
+      echon("  this might be a bug in the website, , it would be helpful if");
+      echon("  you could report this to " . $EMAILS['WEB'] . ".");
+      echon("</p>");
+      echon("<p>");
+      echon("  <a href='" . $URLS['EVENT_LIST']
+                             . "'>Click here to go to the list of events.</a>");
+      echon("</p>");
+      return FALSE;
+    }
+
+    $eventid = $_GET[;
     $signup_url = $URLS['USER_SIGNUP'] .'?eventid=' . $eventid;
     
-    $assign_experiments = check_standard_questions($eventid, 'expts');
-
     echon('<p>');
     echon('  The publicly facing signup form for this page can be found at');
     echon('  <a href="' . $signup_url . '">' . $signup_url . '</a>');
     echon('</p>');
 
-    if ($assign_experiments)
-    {
-      echon('<p>');
-      echon('  The experiment selection for this page can be found at');
-      echon('  <a href="' . $signup_url . '">' . $signup_url . '</a>');
-      echon('</p>');
-    }
+    echon('<p>');
+    echon('  The publicly facing signup form for this page can be found at');
+    echon('  <a href="' . $signup_url . '">' . $signup_url . '</a>');
+    echon('</p>');
 
     $all_signups = list_all_signups($eventid);
 
@@ -61,11 +67,6 @@
                           'yeargroup' => 'Year');
     $other_columns = Array('session'  => 'Session',
                            'comments' => 'Comments');
-                           
-    if ($assign_experiments)
-    {
-      $other_columns['numexpts'] = 'Expts picked';
-    }
 
     $num_cols = count($user_columns) + count($other_columns);
 
@@ -120,12 +121,6 @@
         elseif ($col_key == 'comments')
         {
           echon('    <td>' . $font_start_tag . get_comments($eventid, $userid)
-                                                    . $font_end_tag . '</td>');
-        }
-        elseif ($col_key == 'numexpts')
-        {
-          $numexpts = count(get_user_expt_choices($eventid, $userid));
-          echon('    <td>' . $font_start_tag . $numexpts
                                                     . $font_end_tag . '</td>');
         }
       }

@@ -8,6 +8,40 @@
   include_once("../signup_system/constants.php");
 
   /**
+   * Adds an experiment to the list of expts chosen by a demonstrator for
+   * the specified event.
+   *
+   * @param $eventid    The node ID of the event.
+   * @param $userid     The user's ID.
+   * @param $exptid     The node ID of the experiment
+   *
+   * @returns Boolean   TRUE if successful, FALSE otherwise.
+   */
+  function add_expt_choice_to_event($eventid, $userid, $exptid)
+  {
+    global $TABLES;
+
+    #--------------------------------------------------------------------------
+    # Check whether the experiment and event IDs given correspond to actual
+    # experiments and events.  If not, do nothing.
+    #--------------------------------------------------------------------------
+    if (is_experiment($exptid) && is_event($eventid))
+    {
+      $query = "INSERT INTO " . $TABLES['EXPT_CHOICE']
+                      . " (eventid, userid, exptid) VALUES"
+                      . "('" . $eventid .  "', '" . $userid . "', '"
+                                                  . $exptid . "')";
+      $successful = db_query($query);
+    }
+    else
+    {
+      $successful = FALSE;
+    }
+
+    return $successful;
+  }
+
+  /**
    * Checks if we are asking various standard question types for this event.
    * Can only be used to check answers to Yes/No/Later questions.
    *
@@ -265,7 +299,6 @@
     {
       return FALSE;
     }
-  
   }
 
   /**
@@ -300,14 +333,14 @@
     }
   }
   
-  /**
-   * Get session wanted by user for this event
-   *
-   * @param $eventid  Event ID
-   * @param $userid      User ID
-   *
-   * @return String Session wanted, or empty string if no record exists.
-   */
+ /**
+  * Get session wanted by user for this event
+  *
+  * @param $eventid   Event ID
+  * @param $userid    User ID
+  *
+  * @return String Session wanted, or empty string if no record exists.
+  */
   function get_session_wanted($eventid, $userid)
   {
     global $TABLES;
@@ -336,7 +369,7 @@
    * Function for extracting user information safely, either from the user table
    * or the user profile table as appropriate.
    *
-   * @param $userid     User ID.
+   * @param $userid  User ID.
    * @param $key     The keyname for the property being extracted.  Must be one
    *                 of those names listed in $profile_keys or $user_keys below.
    * @return String  The value of the field if it exists.
@@ -403,19 +436,49 @@
       return $return_value;
     }
   }
+
+ /**
+  * Gets the user's current experiment choice from the DB.
+  *
+  * @param $eventid    The node ID of the event.
+  * @param $userid     The user's ID.
+  *
+  * @returns Array   Simple list of experiment IDs, empty if none known.
+  */
+  function get_user_expt_choices($eventid, $userid)
+  {
+    global $TABLES;
+
+    $query = 'SELECT exptid FROM '. $TABLES['EXPT_CHOICE'] . ' WHERE userid="'
+                 . (string)$userid . '" AND eventid="' . (string)$eventid . '"';
+
+    $query_result = db_query($query);
+
+    $output_array = Array();
+
+    while ($row = db_fetch_array($query_result))
+    {
+      if (isset($row['exptid']))
+      {
+        $output_array[] = $row['exptid'];
+      }
+    }
+
+    return $output_array;
+  }
   
-  /**
-   * Gets the node title of a node with the given ID.
-   *
-   * @param $nid   The node ID.
-   *
-   * @return String  The node title, or FALSE if it fails to find it.
-   */
+ /**
+  * Gets the node title of a node with the given ID.
+  *
+  * @param $nid   The node ID.
+  *
+  * @return String  The node title, or FALSE if it fails to find it.
+  */
   function get_node_title($nid)
   {
     $latest_ver = get_latest_revision($nid);
 
-    $query = 'SELECT title FROM drupal_node WHERE nid = "' . $nid .
+    $query = 'SELECT title FROM {node} WHERE nid = "' . $nid .
                                            '" AND vid = "' . $latest_ver . '"';
     $query_result = db_query($query);
     $row = db_fetch_array($query_result);
@@ -476,11 +539,11 @@
     }
   }
   
-  /**
-   * Checks if user with $userid supplied is a committee member.
-   *
-   * @todo Implement
-   */
+ /**
+  * Checks if user with $userid supplied is a committee member.
+  *
+  * @todo Implement
+  */
   function is_committee($userid)
   {
     #  global $user;
@@ -554,18 +617,18 @@
     }
   }
 
-  /**
-   * Add this signup to the database.
-   *
-   * @param $current_time   The current time in seconds past the epoch.
-   * @param $eventid        The node ID of the current event.
-   * @param $userid         The user ID of the user signing up for it.
-   * @param $status         The current status of the signup.
-   *                        Defaults to "new".
-   *
-   * @return Boolean        True if successful, False otherwise.
-   * @todo   Add better error handling.
-   */
+ /**
+  * Add this signup to the database.
+  *
+  * @param $current_time   The current time in seconds past the epoch.
+  * @param $eventid        The node ID of the current event.
+  * @param $userid         The user ID of the user signing up for it.
+  * @param $status         The current status of the signup.
+  *                        Defaults to "new".
+  *
+  * @return Boolean        True if successful, False otherwise.
+  * @todo   Add better error handling.
+  */
   function save_signup_to_db($current_time,
                              $eventid,
                              $userid,
@@ -620,15 +683,15 @@
     return True;
   }
 
-  /**
-   * Store demonstrators' other comments in the DB.
-   *
-   * @param $eventid  The event ID
-   * @param $userid   The user ID to store
-   * @param $comment  The comment to store.
-   *
-   * @return Boolean  True if (we think we are) successful, else False.
-   */
+ /**
+  * Store demonstrators' other comments in the DB.
+  *
+  * @param $eventid  The event ID
+  * @param $userid   The user ID to store
+  * @param $comment  The comment to store.
+  *
+  * @return Boolean  True if (we think we are) successful, else False.
+  */
   function save_comments($eventid, $userid, $comment)
   {
     global $TABLES;
@@ -655,16 +718,16 @@
     return True;
   }
   
-  /**
-   * Store details about sessions wanted or assigned in the database.
-   *
-   * @param $eventid  The event ID
-   * @param $userid   The user ID to store
-   * @param $wanted   The session(s) requested by the user.
-   * @param $assigned The session(s) that the user has been assigned to.
-   *
-   * @return Boolean  True if (we think we are) successful, else False.
-   */
+ /**
+  * Store details about sessions wanted or assigned in the database.
+  *
+  * @param $eventid  The event ID
+  * @param $userid   The user ID to store
+  * @param $wanted   The session(s) requested by the user.
+  * @param $assigned The session(s) that the user has been assigned to.
+  *
+  * @return Boolean  True if (we think we are) successful, else False.
+  */
   function save_sessions($eventid, $userid, $wanted, $assigned)
   {
     global $TABLES;
@@ -704,15 +767,15 @@
     return True;
   }
 
-  /**
-   * Checks whether a sign-up for this user at this event already exists in the
-   * database.
-   *
-   * @param  $eventid    The node ID of the event.
-   * @param  $userid     The user ID of the user.
-   *
-   * @return Boolean     True or False as appropriate.
-   */
+ /**
+  * Checks whether a sign-up for this user at this event already exists in the
+  * database.
+  *
+  * @param  $eventid    The node ID of the event.
+  * @param  $userid     The user ID of the user.
+  *
+  * @return Boolean     True or False as appropriate.
+  */
   function signup_exists($eventid, $userid)
   {
     global $TABLES;
@@ -731,13 +794,13 @@
     }
   }
   
-  /**
-   * Check whether a user actually exists.
-   *
-   * @param  userid     User ID to check
-   *
-   * @return Boolean TRUE or FALSE as appropriate
-   */
+ /**
+  * Check whether a user actually exists.
+  *
+  * @param  userid     User ID to check
+  *
+  * @return Boolean TRUE or FALSE as appropriate
+  */
   function user_exists($userid)
   {
     $query = 'SELECT uid FROM drupal_users WHERE uid=' . $userid;
@@ -988,4 +1051,33 @@
     return $output_array;
   }
 
+ /**
+  * Save a user's experiment choice to the database.  Requires $_POST access.
+  *
+  * @param $eventid    The node ID of the event.
+  * @param $userid     The user's ID.
+  */
+  function save_user_expt_choices($eventid, $userid)
+  {
+    global $TABLES;
+
+    $query = 'DELETE FROM '. $TABLES['EXPT_CHOICE'] . ' WHERE userid="'
+                 . (string)$userid . '" AND eventid="' . (string)$eventid . '"';
+    $successful = db_query($query);
+
+    if (isset($_POST['exptlist']))
+    {
+      $new_expt_list = $_POST['exptlist'];
+
+      if (count($new_expt_list) > 0 and count($new_expt_list) < 3)
+      {
+        echon('<b>Please select at least 3 experiment choices</b>');
+      }
+
+      foreach ($new_expt_list as $exptid)
+      {
+        add_expt_choice_to_event($eventid, $userid, $exptid);
+      }
+    }
+  }
 ?>

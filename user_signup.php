@@ -137,21 +137,24 @@
     
     if ($expts_assigned['mornexptid'] || $expts_assigned['afterexptid'])
     {
+      echon("<table bgcolor='#00FFCC'><tr><td>");
       echon('You have been assigned to the following experiments:<br />');
-    }
-    
-    if ($expts_assigned['mornexptid'])
-    {
-      echon('Morning: <a href="' . $URLS['BASE'] .  '/node/'
-            . (string)$expts_assigned['mornexptid']. '">' .
-              get_node_title($expts_assigned['mornexptid']) . '</a><br />');
-    }
+      
+      if ($expts_assigned['mornexptid'])
+      {
+        echon('Morning: <a href="' . $URLS['BASE'] .  '/node/'
+              . (string)$expts_assigned['mornexptid']. '">' .
+                get_node_title($expts_assigned['mornexptid']) . '</a><br />');
+      }
 
-    if ($expts_assigned['afterexptid'])
-    {
-      echon('Afternoon: <a href="' . $URLS['BASE'] .  '/node/'
-            . (string)$expts_assigned['afterexptid']. '">' .
-              get_node_title($expts_assigned['afterexptid']) . '</a><br />');
+      if ($expts_assigned['afterexptid'])
+      {
+        echon('Afternoon: <a href="' . $URLS['BASE'] .  '/node/'
+              . (string)$expts_assigned['afterexptid']. '">' .
+                get_node_title($expts_assigned['afterexptid']) . '</a><br />');
+      }
+      
+      echon("</td></tr></table>");
     }
 
     #---------------------------------------------------------------------------

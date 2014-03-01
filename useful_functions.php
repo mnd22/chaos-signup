@@ -643,25 +643,14 @@
       return False;
     }
 
-    if (comment_exists($eventid, $userid))
-    {
-      #-------------------------------------------------------------------------
-      # Update an existing comment
-      #-------------------------------------------------------------------------
-      db_query('UPDATE ' . $TABLES['COMMENTS'] .
-                           ' SET comment="%s" WHERE userid="' . $userid .
-                           '" AND eventid="' . $eventid . '"', $comment);
-    }
-    else
-    {
-      #-------------------------------------------------------------------------
-      # Create a new comment.
-      #-------------------------------------------------------------------------
-      db_query('INSERT INTO ' . $TABLES['COMMENTS'] .
+    $query = 'DELETE FROM ' . $TABLES['COMMENTS'] .
+               ' WHERE userid="' . $userid . '" AND eventid="' . $eventid . '"';
+    db_query($query);
+
+    db_query('INSERT INTO ' . $TABLES['COMMENTS'] .
                       ' (eventid, userid, comment)' .
                       ' VALUES ("' . $eventid . '", "' . $userid . '", "%s")',
                $comment);
-    }
 
     return True;
   }

@@ -88,11 +88,8 @@
                  . (string)$userid . '" AND eventid="' . (string)$eventid . '"';
     $successful = db_query($query);
   
-    if (!isset($_POST['exptlist']))
+    if (isset($_POST['exptlist']))
     {
-      #------------------------------------------------------------------------
-      # No experiments selected, so nothing else to do.
-      #------------------------------------------------------------------------
       $new_expt_list = $_POST['exptlist'];
       
       if (count($new_expt_list) > 0 and count($new_expt_list) < 3)

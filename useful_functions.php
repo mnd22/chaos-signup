@@ -768,7 +768,7 @@
       return FALSE;
     }
 
-    while ($row = db_fetch_array($query_result))
+    while ($row = db_fetch_array($result))
     {
       #-------------------------------------------------------------------------
       # Add user ID to the list.

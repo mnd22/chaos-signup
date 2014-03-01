@@ -24,9 +24,10 @@
    *
    * @returns Boolean   TRUE if successful, FALSE otherwise.
    */
-  function add_experiment_to_event($exptid, $eventid, $min_dems, $max_dems)
+  function add_experiment_to_event($exptid, $eventid, $mindems, $maxdems)
   {
-
+    global $TABLES;
+    
     #--------------------------------------------------------------------------
     # Check whether the experiment and event IDs given correspond to actual
     # experiments and events.  If not, do nothing.
@@ -35,8 +36,8 @@
     {
       $query = "INSERT INTO " . $TABLES['EXPERIMENTS']
                       . " (eventid, exptid, mindems, maxdems) VALUES"
-                      . "('" . $exptid .  "', '" . $eventid . "', '"
-                             . $mindems . "', '" . $mindems ."')";
+                      . "('" . $eventid .  "', '" . $exptid . "', '"
+                             . $mindems . "', '" . $maxdems ."')";
       $successful = db_query($query);
     }
     else
@@ -49,13 +50,18 @@
 
  /**
   * Clears out existing experiment choices, and replaces them with new ones.
+  * Requires $_POST access.
+  *
   * @param $eventid  ID of the event that we're saving expts for.
   *
   */
   function save_experiment_list($eventid)
   {
-    $query = 'DELETE FROM table_name WHERE eventid = ' . (string)$eventid;
-    $successful = db_query($insert_query);
+    global $TABLES;
+
+    $query = 'DELETE FROM '. $TABLES['EXPERIMENTS'] . ' WHERE eventid = '
+                                                    . (string)$eventid;
+    $successful = db_query($query);
   
     if (isset($_POST['exptlist']))
     {
@@ -74,11 +80,11 @@
       
         $successful = add_experiment_to_event($exptid, 
                                               $eventid,
-                                              $min_dems,
-                                              $max_dems);
+                                              $mindems,
+                                              $maxdems);
         if (!$successful)
         {
-          echon('Failed to save experiment $exptid to DB');
+          echon('Failed to save experiment ' . $exptid . ' to DB');
         }
       }
     }
@@ -87,11 +93,13 @@
       echon("You've clicked submit, but no experiments were selected.  If");
       echon("this wasn't intentional you'll need to select a new list now");
     }
+    
+    return $successful;
   }
   
   function main()
   {
-    global $URLS, $TABLES, $EMAILS;
+    global $URLS, $TABLES, $EMAILS, $EXPT_SUBJECTS;
         
     if (!isset($_GET['eventid']))
     {
@@ -148,14 +156,14 @@
     #---------------------------------------------------------------------------
     # Now create the form that allows the user to enter updates.              
     #---------------------------------------------------------------------------
-    $current_url = $URLS['EXPT_CHOICE'] . '?eventid=' . $event_id;
-    echon('<form action="' . $current_url . '" method="get">');
+    $current_url = $URLS['EXPT_CHOICE'] . '?eventid=' . $eventid;
+    echon('<form action="' . $current_url . '" method="post">');
     echon('  <input type="hidden" name="changesubmitted" />');
-    echon('  <input type="hidden" name="eventid" value="' . $event_id . '"/>');
+    echon('  <input type="hidden" name="eventid" value="' . $eventid . '"/>');
 
     echon('  <table>');
     echon('    <tr>');
-    echon('      <th>ExperimentName</th>');
+    echon('      <th>Experiment Name</th>');
     echon('      <th>Selected</th>');
     echon('      <th>Min dems</th>');
     echon('      <th>Max dems</th>');
@@ -182,16 +190,27 @@
       {
         if ($expt_details['subject'] == $subject)
         {
+          $checked_string = '';
+          $minvalue = '1';
+          $maxvalue = '1';
+
+          if (array_key_exists($exptid, $current_expt_list))
+          {
+            $checked_string = 'checked="checked" ';
+            $minvalue = $current_expt_list[$exptid]['mindems'];
+            $maxvalue = $current_expt_list[$exptid]['maxdems'];
+          }
+
           $expt_url = $BASE_URL . '/node/' . (string)$exptid;
           echon('    <tr>');
-          echon('      <td><a href="' . $expt_url . '">' . $expt_details['name']
-                                                         . "</a></td>");
+          echon('      <td><a href="' . $expt_url . '">'
+                      . htmlspecialchars($expt_details['title']) . "</a></td>");
           echon('      <td><input type="checkbox" name="exptlist[]" value="'
-                                                        . $exptid . '/> </td>');
+                              . $exptid . '" ' . $checked_string . '/> </td>');
           echon('      <td><input type="text" name="min' . $exptid
-                                                        . '" value="1"/></td>');
+                              . '" value="' . $minvalue . '" size="3" /></td>');
           echon('      <td><input type="text" name="max' . $exptid
-                                                        . '" value="1"/></td>');
+                              . '" value="' . $maxvalue . '" size="3" /></td>');
           echon('    </tr>');
         }
       }

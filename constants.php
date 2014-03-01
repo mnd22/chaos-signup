@@ -38,7 +38,8 @@
                   'VOLUNTEERS'   => $SIGNUP_PREFIX . 'volunteers',
                   'EXPERIMENTS'  => $SIGNUP_PREFIX . 'experiments',
                   'COMMENTS'     => $SIGNUP_PREFIX . 'othercomments',
-                  'SESSIONS'     => $SIGNUP_PREFIX . 'sessions');
+                  'SESSIONS'     => $SIGNUP_PREFIX . 'sessions',
+                  'EXPT_CHOICE'  => $SIGNUP_PREFIX . 'expt_choice');
   /**
    * List of subjects allowed for experiments (different from that for
    * volunteers).
@@ -46,10 +47,10 @@
    * The number is the taxonomy tag ID for each subject.
    */
   global $EXPT_SUBJECTS;
-  $EXPT_SUBJECTS = Array('17' => 'Biology'     ,
-                         '37' => 'Engineering',
-                         '15' => 'Chemistry',
+  $EXPT_SUBJECTS = Array('15' => 'Chemistry',
                          '16' => 'Medicine',
                          '14' => 'Physics',
+                         '37' => 'Engineering',
+                         '17' => 'Biology',
                          '18' => 'Other');
 ?>

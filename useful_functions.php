@@ -843,25 +843,41 @@
   *                   before the function is called.
   *
   * @returns String   The intro, or empty string if it can't find it.
-  *
-  * @todo Finish this; need to set up version ID finding.
   */
-  function get_expt_intro($exptid, $verifyid = TRUE)
+  function get_expt_intro($exptid, $versionid = 0, $verifyid = TRUE)
   {
+
+    if ($versionid == 0)
+    {
+      #-------------------------------------------------------------------------
+      # No version ID specified, so need to look it up.
+      #-------------------------------------------------------------------------
+      $query = "SELECT vid FROM {node} WHERE type = 'experiment' " .
+                                                 " AND nid =" . $exptid;
+      $query_result = db_query($query);
+      $row = db_fetch_array($query_result);
+
+      if (isset($row['vid']))
+      {
+        $versionid = $row['vid'];
+      }
+    }
+
     if ((!$verifyid) or is_experiment($exptid))
     {
-      #$query = 'SELECT field_intro_value FROM {content_type_experiment} ' .
-               'WHERE nid = ' . $exptid . ' AND vid = ' . $versionid;
-      #$intro_row = db_fetch_array(db_query($query));
+      $query = 'SELECT field_intro_value FROM {content_type_experiment} ' .
+                'WHERE nid="' . $exptid . '" AND vid ="' . $versionid . '"';
 
-      #if (isset($intro_row['field_intro_value']))
-      #{
-      #  return $intro_row[$term_row['field_intro_value']];
-      #}
-      #else
-      #{
+      $intro_row = db_fetch_array(db_query($query));
+
+      if (isset($intro_row['field_intro_value']))
+      {
+        return $intro_row['field_intro_value'];
+      }
+      else
+      {
         return '';
-      #}
+      }
     }
     else
     {

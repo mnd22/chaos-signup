@@ -594,7 +594,7 @@
       db_query('INSERT INTO ' . $TABLES['VOLUNTEERS'] .
                       ' (eventid, userid, datecreated, datechanged, status) ' .
                ' VALUES (' . $eventid . ', ' . $userid . ', ' .
-                      $time_string . ', ' . $time_string . ', ' .$status . ')');
+                    $time_string . ', ' . $time_string . ', "' .$status . '")');
     }
 
     return True;

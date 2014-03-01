@@ -11,11 +11,10 @@
    *   Array ( [Field] => datechanged [Type] => int(10) unsigned [Null] => NO )
    *
    * @author   Mark Durkee
-   * @version  V0.01
+   * @version  V0.02
    */
    
   include_once("../signup_system/useful_functions.php");
-  include_once("../signup_system/constants.php");
 
   /**
    * Adds an experiment to the list for the specified event.
@@ -34,9 +33,10 @@
     #--------------------------------------------------------------------------
     if (is_experiment($exptid) && is_event($eventid))
     {
-      $query = 'INSERT INTO ' . $TABLES['EXPERIMENTS'] . ' '
-                      . "(eventid, exptid) VALUES"
-                      . "('" . $exptid . "', '" . $eventid . "')";
+      $query = "INSERT INTO " . $TABLES['EXPERIMENTS']
+                      . " (eventid, exptid, mindems, maxdems) VALUES"
+                      . "('" . $exptid .  "', '" . $eventid . "', '"
+                             . $mindems . "', '" . $mindems ."')";
       $successful = db_query($query);
     }
     else
@@ -59,12 +59,27 @@
   
     if (isset($_POST['exptlist']))
     {
-      $new_expt_list = $_POST('exptlist');
+      $new_expt_list = $_POST['exptlist'];
       
       foreach($new_expt_list as $exptid)
       {
-        $query = 'DELETE FROM table_name WHERE eventid = ' . (string)$eventid;
-        $successful = db_query($insert_query);
+        $mindems = '1';
+        $maxdems = '1';
+
+        if (isset($_POST['min' . $exptid]) && isset($_POST['max' . $exptid]))
+        {
+          $mindems = $_POST['min' . $exptid];
+          $maxdems = $_POST['max' . $exptid];
+        }
+      
+        $successful = add_experiment_to_event($exptid, 
+                                              $eventid,
+                                              $min_dems,
+                                              $max_dems);
+        if (!$successful)
+        {
+          echon('Failed to save experiment $exptid to DB');
+        }
       }
     }
     else
@@ -72,7 +87,6 @@
       echon("You've clicked submit, but no experiments were selected.  If");
       echon("this wasn't intentional you'll need to select a new list now");
     }
-  
   }
   
   function main()

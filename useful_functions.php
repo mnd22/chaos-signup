@@ -841,7 +841,8 @@
       $query = "SELECT vid FROM {node} WHERE type = 'experiment' " .
                                                  " AND nid =" . $exptid;
       $query_result = db_query($query);
-      $row = db_fetch_array($query_result)
+      $row = db_fetch_array($query_result);
+      
       if (isset($row['vid']))
       {
         $versionid = $row['vid'];

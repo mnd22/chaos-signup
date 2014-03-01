@@ -820,6 +820,8 @@
   * Gets the subject of the experiment given
   *
   * @param $exptid    The experiment to check.
+  * @param $versionid The version ID of the experiment.  If this is not set
+  *                   then we need to find the expt record first.
   * @param $verifyid  Boolean determining whether we should verify that the
   *                   exptid is a legitimate experiment.  Defaults to TRUE; we
   *                   might want to set it to FALSE to avoid additional
@@ -829,28 +831,60 @@
   * @returns String   The subject.  'Unknown' if we can't find it, FALSE if this
   *                   is not actually an experiment.
   */
-  function get_expt_subject($exptid, $verifyid = TRUE)
+  function get_expt_subject($exptid, $versionid = 0, $verifyid = TRUE)
   {
+    if ($versionid == 0)
+    {
+      #-------------------------------------------------------------------------
+      # No version ID specified, so need to look it up.
+      #-------------------------------------------------------------------------
+      $query = "SELECT vid FROM {node} WHERE type = 'experiment' " .
+                                                 " AND nid =" . $exptid;
+      $query_result = db_query($query);
+      $row = db_fetch_array($query_result)
+      if (isset($row['vid']))
+      {
+        $versionid = $row['vid'];
+      }
+    }
+
     if ((!$verifyid) or is_experiment($exptid))
     {
+      #-------------------------------------------------------------------------
+      # Build a string representing the list of allowed subjects, for use in
+      # MySQL query.
+      #-------------------------------------------------------------------------
+      global $EXPT_SUBJECTS;
+      $subjects_string = '(';
+
+      foreach ($EXPT_SUBJECTS as $tid => $subject)
+      {
+        $subjects_string = $subjects_string . '"' . (string)$tid . '", ';
+      }
+
+      $subjects_string = substr($subjects_string, 0, -2) . ')';
+      
+      #-------------------------------------------------------------------------
+      # Run the query.
+      #-------------------------------------------------------------------------
       $query = 'SELECT tid FROM {term_node} ' .
                    'WHERE vid = ' . $versionid . ' AND nid = ' . $exptid .
                    ' AND tid IN ' . $subjects_string;
 
-        $term_row = db_fetch_array(db_query($query));
+      $term_row = db_fetch_array(db_query($query));
 
-        if (isset($term_row['tid']) and in_array($term_row['tid'],
-                                                 $EXPT_SUBJECTS))
-        {
-          #-------------------------------------------------------------------
-          # This is a subject.
-          #-------------------------------------------------------------------
-          return $EXPT_SUBJECTS[$term_row['tid']];
-        }
-        else
-        {
-          return 'Unknown';
-        }
+      if (isset($term_row['tid']) and array_key_exists($term_row['tid'],
+                                                       $EXPT_SUBJECTS))
+      {
+        #-------------------------------------------------------------------
+        # This is a subject.
+        #-------------------------------------------------------------------
+        return $EXPT_SUBJECTS[$term_row['tid']];
+      }
+      else
+      {
+        return 'Unknown';
+      }
     }
     else
     {
@@ -869,20 +903,6 @@
   {
     global $TABLES;
 
-    #---------------------------------------------------------------------------
-    # Build a string representing the list of allowed subjects, for use in
-    # MySQL query.
-    #---------------------------------------------------------------------------
-    global $EXPT_SUBJECTS;
-    $subjects_string = '(';
-
-    foreach ($EXPT_SUBJECTS as $tid => $subject)
-    {
-      $subjects_string = $subjects_string . '"' . (string)$tid . '", ';
-    }
-
-    $subjects_string = substr($subjects_string, 0, -2) . ')';
-
     $output_array = Array();
 
     #-------------------------------------------------------------------------
@@ -895,11 +915,12 @@
     {
       if (isset($row['nid']) and isset($row['title']) and isset($row['vid']))
       {
-        #$versionid = $row['vid'];
+        $versionid = $row['vid'];
         $exptid = $row['nid'];
 
         $output_array[$exptid] = Array('title'   => $row['title'],
                                        'subject' => get_expt_subject($exptid,
+                                                                     $versionid,
                                                                      FALSE));
       }
     }

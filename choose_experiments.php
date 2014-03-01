@@ -93,7 +93,7 @@
   {
     global $URLS, $TABLES, $EMAILS;
         
-    if (!isset($_POST['eventid']))
+    if (!isset($_GET['eventid']))
     {
       echon("<p>");
       echon(" This page allows you to choose experiments in use for an event,");
@@ -112,7 +112,7 @@
     #---------------------------------------------------------------------------
     # Page has been called with an event specified, so record this and proceed.
     #---------------------------------------------------------------------------
-    $event_id = $_POST['eventid'];
+    $eventid = $_GET['eventid'];
 
     if (!is_event($eventid))
     {

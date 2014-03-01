@@ -12,42 +12,8 @@
    * @version  V0.03
    */
 
-  include("../signup_system/useful_functions.php");
-  
- /**
-  * Gets a list of user IDs for all signups for an event.
-  *
-  * @param $eventid  The ID of the event we're interested in.
-  *
-  * @returns Array  List of uids for each user signup.
-  */
-  function list_all_signups($eventid)
-  {
-    global $TABLES;
-    $query = 'SELECT userid FROM ' . $TABLES['VOLUNTEERS'] .
-                                            ' WHERE eventid="' . $eventid . '"';
-    $query_result = db_query($query);
-    $output_array = Array();
+  include_once("../signup_system/useful_functions.php");
 
-    if ($query_result->num_rows == 0)
-    {
-      #-------------------------------------------------------------------------
-      # No-one has signed up for this event yet.
-      #-------------------------------------------------------------------------
-      return FALSE;
-    }
-
-    while ($row = db_fetch_array($query_result))
-    {
-      #-------------------------------------------------------------------------
-      # Add user ID to the list.
-      #-------------------------------------------------------------------------
-      $output_array[] = $row['userid'];
-    }
-
-    return $output_array;
-  }
-  
   /**
    * Displays a list of current signups.
    */

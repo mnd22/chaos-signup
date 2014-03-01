@@ -63,7 +63,7 @@
     
     $output_array = Array();
     
-    while ($row = db_fetch_array($query_result));
+    while ($row = db_fetch_array($query_result))
     {
       if (isset($row['exptid']))
       {
@@ -73,6 +73,7 @@
     
     return $output_array;
   }
+  
  /**
   * Save a user's experiment choice to the database.  Requires $_POST access.
   *
@@ -93,6 +94,11 @@
       # No experiments selected, so nothing else to do.
       #------------------------------------------------------------------------
       $new_expt_list = $_POST['exptlist'];
+      
+      if (count($new_expt_list) > 0 and count($new_expt_list) < 3)
+      {
+        echon('<b>Please select at least 3 experiment choices</b>');
+      }
       
       foreach ($new_expt_list as $exptid)
       {

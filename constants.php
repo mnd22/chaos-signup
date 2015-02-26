@@ -16,6 +16,7 @@
                 'USER_SIGNUP'    => $BASE_URL . '/demonstrator/signup',
                 'EDIT_SIGNUP'    => $BASE_URL . '/committee/events/editsignup',
                 'EXPT_CHOICE'    => $BASE_URL . '/committee/events/chooseexpts',
+                'LIST_BY_EXPT'   => $BASE_URL . '/committee/events/listbyexperiment',
                 'REGISTER'       => $BASE_URL . '/user/register',
                 'LOGIN'          => $BASE_URL . '/user/login',
                 'EXPT_LIST'      => $BASE_URL . '/experiments',
@@ -53,12 +54,14 @@
    * The number is the taxonomy tag ID for each subject.
    */
   global $EXPT_SUBJECTS;
-  $EXPT_SUBJECTS = Array('15' => 'Chemistry',
-                         '16' => 'Medicine',
-                         '14' => 'Physics',
-                         '37' => 'Engineering',
-                         '17' => 'Biology',
-                         '18' => 'Other');
+  $EXPT_SUBJECTS = Array('15'  => 'Chemistry',
+                         '16'  => 'Medicine',
+                         '14'  => 'Physics',
+                         '37'  => 'Engineering',
+                         '17'  => 'Biology',
+                         '134' => 'Maths',
+                         '149' => 'Geology',
+                         '18'  => 'Other');
                          
   global $CONSTANTS;
   $CONSTANTS = Array('MIN_EXPTS_CHOSEN' => 5,

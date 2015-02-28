@@ -468,6 +468,21 @@
   }
   
  /**
+  * Returns a link to the node with the given ID.  No checking is performed on
+  * whether the node link is valid.
+  *
+  * @param $nid   The node ID.
+  *
+  * @return String  The node link.
+  */
+  function get_node_link($nid)
+  {
+    global $URLS;
+    
+    return $URLS['BASE'] . '/node/' . $eventid;
+  }
+  
+ /**
   * Gets the node title of a node with the given ID.
   *
   * @param $nid   The node ID.

@@ -2,7 +2,6 @@
   /** @file constants.php
    *
    * @author   Mark Durkee
-   * @version  V0.01
    */
 
   /**
@@ -12,10 +11,12 @@
   $BASE_URL = 'http://www.chaosscience.org.uk';
   $URLS = Array('BASE'           => $BASE_URL,
                 'EVENT_LIST'     => $BASE_URL . '/demonstrator/event_list',
-                'COMMITTEE_BASE' => $BASE_URL . '/committee/events',
                 'USER_SIGNUP'    => $BASE_URL . '/demonstrator/signup',
+                'COMMITTEE_BASE' => $BASE_URL . '/committee/events',
                 'EDIT_SIGNUP'    => $BASE_URL . '/committee/events/editsignup',
                 'EXPT_CHOICE'    => $BASE_URL . '/committee/events/chooseexpts',
+                'EXPT_ASSIGN'    => $BASE_URL . '/committee/events/assignexpts',
+                'VIEW_EXPT_LIST' => $BASE_URL . '/committee/events/viewexptchoices',
                 'LIST_BY_EXPT'   => $BASE_URL . '/committee/events/listbyexperiment',
                 'REGISTER'       => $BASE_URL . '/user/register',
                 'LOGIN'          => $BASE_URL . '/user/login',
@@ -63,6 +64,10 @@
                          '149' => 'Geology',
                          '18'  => 'Other');
                          
+  /**
+   * A collection of other useful constants.  They are gathered into an array to
+   * ease importing large numbers of global variables into other scripts.
+   */                         
   global $CONSTANTS;
   $CONSTANTS = Array('MIN_EXPTS_CHOSEN' => 5,
                      'MORNING_TIMES' => '9.30am-1.30pm',

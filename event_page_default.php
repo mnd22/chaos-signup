@@ -28,7 +28,7 @@
     #---------------------------------------------------------------------------
     $eventid = arg(1);
     $signup_url = $URLS['USER_SIGNUP'] . '?eventid=' . $eventid;
-    
+
     $assign_experiments = check_standard_questions($eventid, 'expts');
 
     echon('<p>');
@@ -38,10 +38,39 @@
 
     if ($assign_experiments)
     {
-      $expt_assign_url = $URLS['EXPT_CHOICE'] . '?eventid=' . $eventid;
+      $expt_choose_url = $URLS['EXPT_CHOICE'] . '?eventid=' . $eventid;
       echon('<p>');
       echon('  The experiment selection for this page can be found at');
+      echon('  <a href="' . $expt_choose_url . '">' . $expt_choose_url .'</a>');
+      echon('  Use this to pick which experiments you want to make available');
+      echon('  for demonstrators to choose, and set limits on people that');
+      echon('  can be assigned for each.');
+      echon('</p>');
+      
+      $expt_choices_url = $URLS['VIEW_EXPT_LIST'] . '?eventid=' . $eventid;
+      echon('<p>');
+      echon('  Having asked demonstrators to return to the');
+      echon('  <a href="' . $signup_url . '">original sign-up page</a>');      
+      echon('  to choose experiments, you can view their choices at:');
+      echon('  <a href="' . $expt_choices_url . '">'.$expt_choices_url .'</a>');
+      echon('  and it may be easiest to copy-paste this page to a spreadsheet');
+      echon('  to figure out how you want to do the assignment.');
+      echon('</p>');   
+            
+      $expt_assign_url = $URLS['EXPT_ASSIGN'] . '?eventid=' . $eventid;
+      echon('<p>');
+      echon('  Experiments can be assigned to demonstrators at this page:');
       echon('  <a href="' . $expt_assign_url . '">' . $expt_assign_url .'</a>');
+      echon('  Demonstrators can then see what they hve been assigned on the');
+      echon('  <a href="' . $signup_url . '">original sign-up page</a>.');
+      echon('</p>');
+
+      $expt_list_url = $URLS['LIST_BY_EXPT'] . '?eventid=' . $eventid;
+      echon('<p>');
+      echon('  The following page is a convenient list of current experiment');
+      echon('  assignment sorted by experiments, with highlighting of those');
+      echon('  without the correct number of demonstrators assigned:');
+      echon('  <a href="' . $expt_list_url . '">' . $expt_list_url . '</a>.');
       echon('</p>');
     }
 

@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['get_5fcomments',['get_comments',['../useful__functions_8php.html#a10d1ba3036b0fac13af4a4eddb2fc8e1',1,'useful_functions.php']]],
+  ['get_5fevent_5fexpt_5flist',['get_event_expt_list',['../useful__functions_8php.html#ab70ecf73f7653ceb415a7f95baf041b1',1,'useful_functions.php']]],
+  ['get_5fexpt_5fassignment',['get_expt_assignment',['../useful__functions_8php.html#aaeaf841b4e6baaafa77ec44d7096a18e',1,'useful_functions.php']]],
+  ['get_5fexpt_5fintro',['get_expt_intro',['../useful__functions_8php.html#a1862681d0ce4d4e9095e31be5dc90535',1,'useful_functions.php']]],
+  ['get_5fexpt_5fsubject',['get_expt_subject',['../useful__functions_8php.html#aaf400736caed9ca830a1d0767a9e6f0f',1,'useful_functions.php']]],
+  ['get_5flatest_5frevision',['get_latest_revision',['../useful__functions_8php.html#a9829c8dfad4806b5ecd0f24acfee3940',1,'useful_functions.php']]],
+  ['get_5fnode_5flink',['get_node_link',['../useful__functions_8php.html#a72fe7eb597518f5a865b4b8517845b62',1,'useful_functions.php']]],
+  ['get_5fnode_5ftitle',['get_node_title',['../useful__functions_8php.html#aea99ecfe248ebf9e7d9a9cc5bc34cd7f',1,'useful_functions.php']]],
+  ['get_5fnode_5ftype',['get_node_type',['../useful__functions_8php.html#aa8ecc80d9e4f1c3fd351e5310401245f',1,'useful_functions.php']]],
+  ['get_5fquestions',['get_questions',['../useful__functions_8php.html#ab9934a09e4896d756864110dfc1fedf9',1,'useful_functions.php']]],
+  ['get_5fsession_5fassigned',['get_session_assigned',['../useful__functions_8php.html#af59a82729646bd808cd85a90084ba0bb',1,'useful_functions.php']]],
+  ['get_5fsession_5fwanted',['get_session_wanted',['../useful__functions_8php.html#a3b7845b4fd8e1f2127d9415930abab73',1,'useful_functions.php']]],
+  ['get_5fsignup_5fstatus',['get_signup_status',['../useful__functions_8php.html#a30e40ccbc68b6be3c6e33752a086c41e',1,'useful_functions.php']]],
+  ['get_5fthanks_5fmessage',['get_thanks_message',['../useful__functions_8php.html#a191f086b969c44ccc3a61ca6ebccb4e7',1,'useful_functions.php']]],
+  ['get_5fuser_5fdetail',['get_user_detail',['../useful__functions_8php.html#a8ad0c990416b4a7294d55f07f91f3bcc',1,'useful_functions.php']]],
+  ['get_5fuser_5fexpt_5fchoices',['get_user_expt_choices',['../useful__functions_8php.html#a8fdb22bbf994b76d7e5d976b6d35048a',1,'useful_functions.php']]]
+];

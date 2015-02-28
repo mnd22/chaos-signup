@@ -2,6 +2,8 @@
 
   /**
    * @file choose_experiments.php
+   * 
+   * http://www.chaosscience.org.uk/committee/events/chooseexpts
    *
    * Table structure is as follows (some info trimmed):
    * DESCRIBE signup_system_experiments
@@ -139,11 +141,26 @@
     }
 
     #---------------------------------------------------------------------------
-    # We now know this is a legitimate event, so print its title and proceed.
+    # We now know this is a legitimate event, so print header and proceed.
     #---------------------------------------------------------------------------
     $event_title = get_node_title($eventid);
+    $event_page_link = get_node_link($eventid);
+    
     echon('<h1>' . $event_title . '</h1>');
     echon('<h2>Selections of available experiments</h2>');
+    echon('<p>'); 
+    echon('  Use this page to select which experiments are required for'); 
+    echon('  the event and how many demonstrators are required for each.'); 
+    echon('  The min/max demonstrators figures will make the assignment tool'); 
+    echon('  automatically highlight when enough demonstrators have been'); 
+    echon('  assigned.  For a reserve experiment that you are happy to not');
+    echon('  run, select 0 as the minimum value.  Some experiments, such as');  
+    echon('  Sodium Acetate, require at least two demonstrators at CBS!');  
+    echon('  '); 
+    echon('</p>');
+    echon('<p><a href="' . get_node_link($eventid) . '">'); 
+    echon('  Return to main event page'); 
+    echon('</a></p>'); 
      
     if (isset($_POST['changesubmitted']))
     {
@@ -234,4 +251,3 @@
 
 ?>
 
- 

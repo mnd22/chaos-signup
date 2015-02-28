@@ -88,12 +88,12 @@
     echon('  they can view their choices on the ');
     echon('  <a href="' . $signup_url . '">original sign-up page</a>');   
     echon('</p><p>');
-    echon('  <a href="' . $expt_list_url . '">This page</a>.');
+    echon('  <a href="' . $expt_list_url . '">This page</a>');
     echon('  is a convenient list of current experiment assignments');
     echon('  sorted by experiments, with highlighting of those without the');
     echon('  correct number of demonstrators assigned, to help this process.');
     echon('</p><p>');
-    echon('  You can view demonstrator preferences at:');
+    echon('  You can view demonstrator preferences at');
     echon('  <a href="' . $expt_choices_url . '">'.$expt_choices_url .'</a>');
     echon('  and it may be easiest to copy-paste this page to a spreadsheet');
     echon('  to figure out how you want to do the assignment.');

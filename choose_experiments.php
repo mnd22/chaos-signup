@@ -4,6 +4,9 @@
    * @file choose_experiments.php
    * 
    * http://www.chaosscience.org.uk/committee/events/chooseexpts
+   * 
+   * POST variables:
+   * @param eventid The node ID of the event to add experiments to.
    *
    * Table structure is as follows (some info trimmed):
    * DESCRIBE signup_system_experiments
@@ -11,9 +14,8 @@
    *   Array ( [Field] => exptid [Type] => int(10) unsigned [Null] => NO )
    *   Array ( [Field] => datecreated [Type] => int(10) unsigned [Null] => NO )
    *   Array ( [Field] => datechanged [Type] => int(10) unsigned [Null] => NO )
-   *
+   * 
    * @author   Mark Durkee
-   * @version  V0.02
    */
    
   include_once("../signup_system/useful_functions.php");

@@ -67,8 +67,13 @@
     $num_cols = count($user_columns) + count($other_columns)
                                      + count($expt_columns);
 
-    echon('<h2>Volunteer signups</h2>');
-
+    echon('<h2>Current volunteer signups</h2>');
+    echon('This page shows more details of current signups, including');
+    echon('experiment assignments when they have been made');
+    echon('<p><a href="' . get_node_link($eventid) . '">'); 
+    echon('  Return to main event page'); 
+    echon('</a></p>'); 
+    
     echon('<table>');
 
     #---------------------------------------------------------------------------

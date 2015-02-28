@@ -17,7 +17,7 @@
   /**
    * Displays a list of current signups.
    */
-  function main()
+  function main_event_page_default()
   {
     global $URLS, $TABLES, $EMAILS, $EXPT_SUBJECTS;
     #---------------------------------------------------------------------------
@@ -171,11 +171,11 @@
 
   }
 
-  #----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # START OF MAIN FUNCTION
   #
-  # Just calls into the main() function defined above.
-  #----------------------------------------------------------------------------
-  main()
-
+  # Just calls into the main_event_page_default() function defined above.
+  # This php file is intended to be pasted into a drupal page.
+  #-----------------------------------------------------------------------------
+  main_event_page_default()
 ?>

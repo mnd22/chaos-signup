@@ -13,6 +13,7 @@ var searchData=
   ['get_5fsession_5fassigned',['get_session_assigned',['../useful__functions_8php.html#af59a82729646bd808cd85a90084ba0bb',1,'useful_functions.php']]],
   ['get_5fsession_5fwanted',['get_session_wanted',['../useful__functions_8php.html#a3b7845b4fd8e1f2127d9415930abab73',1,'useful_functions.php']]],
   ['get_5fsignup_5fstatus',['get_signup_status',['../useful__functions_8php.html#a30e40ccbc68b6be3c6e33752a086c41e',1,'useful_functions.php']]],
+  ['get_5fsignups_5fper_5fexpt',['get_signups_per_expt',['../list__by__experiment_8php.html#a371111f88d368c6c56cc3c1690f8a8a4',1,'list_by_experiment.php']]],
   ['get_5fthanks_5fmessage',['get_thanks_message',['../useful__functions_8php.html#a191f086b969c44ccc3a61ca6ebccb4e7',1,'useful_functions.php']]],
   ['get_5fuser_5fdetail',['get_user_detail',['../useful__functions_8php.html#a8ad0c990416b4a7294d55f07f91f3bcc',1,'useful_functions.php']]],
   ['get_5fuser_5fexpt_5fchoices',['get_user_expt_choices',['../useful__functions_8php.html#a8fdb22bbf994b76d7e5d976b6d35048a',1,'useful_functions.php']]]

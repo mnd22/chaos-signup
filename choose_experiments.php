@@ -25,6 +25,8 @@
    *
    * @param $exptid     The node ID of the experiment
    * @param $eventid    The node ID of the event.
+   * @param $mindems    Minimum number of demonstrators to be assigned.
+   * @param $maxdems    Maximum number of demonstrators to be assigned.
    *
    * @returns Boolean   TRUE if successful, FALSE otherwise.
    */
@@ -101,6 +103,9 @@
     return $successful;
   }
   
+ /**
+  * Generates main page content.
+  */
   function main_choose_experiments()
   {
     global $URLS, $TABLES, $EMAILS, $EXPT_SUBJECTS;

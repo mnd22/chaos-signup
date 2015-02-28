@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['list_5fby_5fexperiment_2ephp',['list_by_experiment.php',['../list__by__experiment_8php.html',1,'']]]
+  ['useful_5ffunctions_2ephp',['useful_functions.php',['../useful__functions_8php.html',1,'']]],
+  ['user_5fsignup_2ephp',['user_signup.php',['../user__signup_8php.html',1,'']]]
 ];

@@ -4,11 +4,15 @@
    * @author   Mark Durkee
    */
 
+ /*
+  * Domain name of the website to deploy this on.
+  */
+  $BASE_URL = 'http://www.chaosscience.org.uk';
+
   /**
    *  References to URLs of other pages within the site.
    */
   global $URLS;
-  $BASE_URL = 'http://www.chaosscience.org.uk';
   $URLS = Array('BASE'           => $BASE_URL,
                 'EVENT_LIST'     => $BASE_URL . '/committee/events/list',
                 'USER_SIGNUP'    => $BASE_URL . '/demonstrator/signup',
@@ -24,22 +28,21 @@
                 'CONTACT'        => $BASE_URL . '/contact');
 
   /**
-   *  Webmaster's e-mail address.
+   *  E-mail addresses used within the system.
    */
   global $EMAILS;
   $EMAILS = Array('WEB'     => "webmaster@chaosscience.org.uk",
                   'CONTACT' => "contact@chaosscience.org.uk");
-  
-  /**
-   * Database tables holding the data for the signup system.
-   * 
-   * signup_system_expt_assign (eventid INT UNSIGNED NOT NULL,
-   *                            userid INT UNSIGNED NOT NULL,
-   *                            mornexptid INT UNSIGNED, 
-   *                            afterexptid INT UNSIGNED)      
-   */
-  global $TABLES;
+
+ /*
+  * Prefix identifying signup system tables within the MySQL database.
+  */
   $SIGNUP_PREFIX = 'signup_system_';
+  
+ /**
+  * Database tables holding the data specific to the signup system.
+  */
+  global $TABLES;
   $TABLES = Array('SIGNUP_EVENT' => 'drupal_content_type_signup_event',
                   'QUESTIONS'    => $SIGNUP_PREFIX . 'questions',
                   'VOLUNTEERS'   => $SIGNUP_PREFIX . 'volunteers',

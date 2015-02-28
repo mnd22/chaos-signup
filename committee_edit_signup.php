@@ -7,10 +7,12 @@
    * @file committee_edit_signup.php
    *
    * @author   Mark Durkee
-   * @version  V0.02
    */
   include_once("../signup_system/useful_functions.php");
-
+  
+ /**
+  * Main function generating page content.
+  */ 
   function main_committee_edit_signup()
   {
     #---------------------------------------------------------------------------

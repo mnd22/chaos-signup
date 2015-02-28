@@ -792,7 +792,7 @@
  /**
   * Check whether a user actually exists.
   *
-  * @param  userid     User ID to check
+  * @param  $userid     User ID to check
   *
   * @return Boolean TRUE or FALSE as appropriate
   */

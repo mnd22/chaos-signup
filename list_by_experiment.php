@@ -9,11 +9,21 @@
    * @file list_by_experiment.php
    *
    * @author   Mark Durkee
-   * @version  V0.01
    */
    
   include_once("../signup_system/useful_functions.php");
   
+ /**
+  * Get list of people who have been assigned to an experiment, structured by
+  * experiment list.
+  *
+  * @param $eventid 
+  * @param $current_expt_list
+  *
+  * @returns Array of form ('morning' => $morning_list, 
+  *                         'afternoon' => $afternoon_list); 
+  *          where each list is an array of assignments to each experiment.
+  */ 
   function get_signups_per_expt($eventid, $current_expt_list)
   {
     global $TABLES;
@@ -72,6 +82,9 @@
                  'afternoon' => $afternoon_list);
   }
   
+ /**
+  * Main function generating page content.
+  */ 
   function main_list_by_experiment()
   {
     global $URLS, $TABLES, $EMAILS, $EXPT_SUBJECTS;

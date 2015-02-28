@@ -4,6 +4,7 @@
    * Lists current assignments for this event by experiment, allowing the
    * user to see which experiments are still awaiting a demonstrator, and
    * which have too many.
+   * http://www.chaosscience.org.uk/committee/events/listbyexperiment
    *      
    * @file list_by_experiment.php
    *

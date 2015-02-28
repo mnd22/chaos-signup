@@ -1,15 +1,14 @@
 <?php
  /**
-   * The PHP code below generates the default content for an event page, giving
-   * the user links to experiment assignment pages etc.  Do not edit it unless
-   * you know what you're doing.  Note that if you do know what you're doing
-   * with PHP it is safe to edit this text for a single event without breaking
-   * other events.
-   *
    * @file experiment_choices_assign.php
-   *
+   * Assign experiments to demonstrators.
+   * 
+   * http://www.chaosscience.org.uk/committee/events/assignexpts
+   * 
+   * POST variables:
+   * @param eventid The node ID of the event to add experiments to.
+   * 
    * @author   Mark Durkee
-   * @version  V0.01
    */
 
   include_once("../signup_system/useful_functions.php");
@@ -77,9 +76,34 @@
 
     $num_signups = count($all_signups);
 
+    $expt_list_url = $URLS['LIST_BY_EXPT'] . '?eventid=' . $eventid;
+    $expt_choices_url = $URLS['VIEW_EXPT_LIST'] . '?eventid=' . $eventid;
+    $signup_url = $URLS['USER_SIGNUP'] . '?eventid=' . $eventid;
+
     echon('<h1>' . $event_title . '</h1>');
     echon('<h2>Assignment of experiments</h2>');
-
+    echon('<p>'); 
+    echon('  Use this page to assign experiments to demonstrators.  Once they'); 
+    echon('  are all assigned, e-mail demonstrators and let them know that');
+    echon('  they can view their choices on the ');
+    echon('  <a href="' . $signup_url . '">original sign-up page</a>');   
+    echon('</p><p>');
+    echon('  <a href="' . $expt_list_url . '">This page</a>.');
+    echon('  is a convenient list of current experiment assignments');
+    echon('  sorted by experiments, with highlighting of those without the');
+    echon('  correct number of demonstrators assigned, to help this process.');
+    echon('</p><p>');
+    echon('  You can view demonstrator preferences at:');
+    echon('  <a href="' . $expt_choices_url . '">'.$expt_choices_url .'</a>');
+    echon('  and it may be easiest to copy-paste this page to a spreadsheet');
+    echon('  to figure out how you want to do the assignment.');
+    echon('</p>');   
+    echon('  Note that choices are only saved when you click Submit.');  
+    echon('</p>');
+    echon('<p><a href="' . get_node_link($eventid) . '">'); 
+    echon('  Return to main event page'); 
+    echon('</a></p>'); 
+    
     if (isset($_POST['changesubmitted']))
     {
       #-------------------------------------------------------------------------

@@ -10,7 +10,7 @@
   global $URLS;
   $BASE_URL = 'http://www.chaosscience.org.uk';
   $URLS = Array('BASE'           => $BASE_URL,
-                'EVENT_LIST'     => $BASE_URL . '/demonstrator/event_list',
+                'EVENT_LIST'     => $BASE_URL . '/committee/events/list',
                 'USER_SIGNUP'    => $BASE_URL . '/demonstrator/signup',
                 'COMMITTEE_BASE' => $BASE_URL . '/committee/events',
                 'EDIT_SIGNUP'    => $BASE_URL . '/committee/events/editsignup',

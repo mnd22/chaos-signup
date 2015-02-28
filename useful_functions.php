@@ -479,7 +479,7 @@
   {
     global $URLS;
     
-    return $URLS['BASE'] . '/node/' . $eventid;
+    return $URLS['BASE'] . '/node/' . $nid;
   }
   
  /**
